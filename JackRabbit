@@ -1,0 +1,228 @@
+#!/bin/bash
+cat << "EOF"
+
+
+
+
+
+
+
+   $$$$$\                     $$\       $$$$$$$\            $$\       $$\       $$\   $$\     
+   \__$$ |                    $$ |      $$  __$$\           $$ |      $$ |      \__|  $$ |    
+      $$ | $$$$$$\   $$$$$$$\ $$ |  $$\ $$ |  $$ | $$$$$$\  $$$$$$$\  $$$$$$$\  $$\ $$$$$$\   
+      $$ | \____$$\ $$  _____|$$ | $$  |$$$$$$$  | \____$$\ $$  __$$\ $$  __$$\ $$ |\_$$  _|  
+$$\   $$ | $$$$$$$ |$$ /      $$$$$$  / $$  __$$<  $$$$$$$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |    
+$$ |  $$ |$$  __$$ |$$ |      $$  _$$<  $$ |  $$ |$$  __$$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |$$\ 
+\$$$$$$  |\$$$$$$$ |\$$$$$$$\ $$ | \$$\ $$ |  $$ |\$$$$$$$ |$$$$$$$  |$$$$$$$  |$$ |  \$$$$  |
+ \______/  \_______| \_______|\__|  \__|\__|  \__| \_______|\_______/ \_______/ \__|   \____/ 
+                                                                                              
+                                                                                              
+   _   _   _   _   _     _   _   _   _   _   _   _   _   _
+  / \ / \ / \ / \ / \   / \ / \ / \ / \ / \ / \ / \ / \ / \ 
+ ( m | a | d | e | # ) ( A | m | e | r | / | 0 | 0 | 4 | 9 )
+  \_/ \_/ \_/ \_/ \_/   \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ \_/ 
+
+
+
+
+
+
+EOF
+#user=`id | cut -d" " -f1 | cut -d"(" -f2 | cut -d")" -f1`
+path="pwd"
+
+
+##set the prompt to show you are in pentmenu and not standard shell
+PS3="Web Application>"
+
+
+###Web Application
+##Sub1 Menu
+sub1menu(){
+echo ""
+echo " Web Application " 
+sub1menu=("Services" "Domain Name Server(DNS)" "Subdomain" "Hidden Files/Directories" "Vulnerabilities" "Back" "Quit")
+select opt in "${sub1menu[@]}"
+do
+	if [ "$opt" = "Back" ]
+	then
+		clear
+		bash michaCry.sh
+	elif [ "$opt" = "Quit" ]
+	then
+		clear
+		figlet -c Thank You ! ! !
+		exit 0
+	elif [ "$opt" = "Services" ]
+	then
+		service
+	elif [ "$opt" = "Subdomain" ]
+	then
+		subdomain
+	elif [ "$opt" = "Domain Name Server(DNS)" ]
+	then
+		dns
+	elif [ "$opt" = "Hidden Files/Directories" ]
+	then
+		hidden
+	elif [ "$opt" = "Vulnerabilities" ]
+	then
+		vulScan
+	fi
+done
+}
+##IP Address
+ipaddress1(){
+echo ""
+echo -e "\e[1mEnter your target's address:\e[0m \c"
+read aim
+target=`echo $aim | cut -d"/" -f3`
+#Input Validation
+if [ "$aim" = "http://$target/" -o "$aim" = "https://$target/" ]
+then
+	ip=`ping $target -c 1 | grep icmp | cut -d" " -f5 | sed 's/(//' | sed 's/)://'`
+	echo -e "==> The IP address of '\e[1m$target\e[0m' is \e[1m$ip\e[0m"
+	sleep 2
+	echo ""
+	if [ -d Target/$target ]
+	then
+		echo -e "\e[31mThe folder for '$target' is already existed.\e[0m"
+		echo -e "\e[1mDo you want to delete the old one and create another [Y/N]:\e[0m \c"
+		read res1
+		if [ "$res1" = "Y" ]
+		then 
+			echo -e "\e[31m\e[1m!!CAUTION: All files included in the old folder will be lost\e[0m\e[0m"
+			sleep 1
+			rm -rf Target/$target
+			mkdir Target/$target
+			echo ""
+			echo -e "\e[1mA new folder for '$target' has been created at Target/$target\e[0m"
+		fi	
+	else
+		mkdir Target/$target
+		echo -e "\e[1mA folder for '$target' has been created at Target/$target\e[0m"
+	fi
+	echo ""
+	sub1menu
+else 
+	echo -e "\e[31m\e[1mNOTE: Using 'http://host/' OR 'https://host/' for SSL\e[0m\e[0m"
+	ipaddress1
+fi
+}
+##Services
+service(){
+clear
+figlet -c Service Scanning
+echo " SERVICES "
+sudo nmap -sS -sV -A -oN Target/$target/nmap $target
+echo ""
+echo -e "\e[1m==> Your Services information is save to Target/$target/nmap\e[0m"
+sub1menu
+}
+##Domain Name Server (DNS)
+dns(){
+clear
+figlet -c DNS Scanning
+echo " DNS "
+dnsenum --nocolor -o Target/$target/dns $target
+echo ""
+echo -e "\e[1m==> Your DNS information is save to Target/$target/dns"
+sub1menu
+}
+##Subdomain
+subdomain(){
+clear
+figlet -c Subdomain Scanning
+echo " SubDomain "
+python webApp/sublister/sublist3r.py -p 80,443 -o Target/$target/subdomain -d $target
+echo ""
+echo -e "\e[1m==> Your SubDomain information is saved to Target/$target/subdomain\e[0m"
+sub1menu
+}
+##Hidden Files/Directories
+hidden(){
+clear 
+figlet -c Hidden Scanning
+echo " Hidden Files/Directories "
+nikto -host $target -output Target/$target/hiddenFiles -Format txt
+echo ""
+echo -e "\e[1m==> Your Hidden information is saved to Target/$target/hiddenFiles"
+sub1menu
+}
+
+
+vulScan(){
+clear
+figlet -c Vulnerabilities Scanner
+echo ""
+echo " Vulnerability Scanner " 
+vulScan=("Cross-site Scripting(XSS) with XSScrapy" "Cross-site Scripting(XSS) with DSJS" "SSL" "Joomla" "Back" "Quit")
+select opt in "${vulScan[@]}"
+do
+	if [ "$opt" = "Back" ]
+	then
+		clear
+		figlet -c Web Application
+		sub1menu
+	elif [ "$opt" = "Quit" ]
+	then
+		clear
+		figlet -c Thank You ! ! !
+		exit 0
+	elif [ "$opt" = "Cross-site Scripting(XSS) with XSScrapy" ]
+	then
+		xss1
+	elif [ "$opt" = "Cross-site Scripting(XSS) with DSJS" ]
+	then
+		xss2
+	elif [ "$opt" = "SSL" ]
+	then 
+		ssl
+	elif [ "$opt" = "Joomla" ]
+	then 
+		joomla
+	fi
+done
+}
+##Cross-site Scripting(XSS) with XSScrapy
+xss1(){
+clear
+figlet -c XSS Scanner
+echo " Cross-site Scripting(XSS) "
+cd webApp/xsscrapy
+python xsscrapy.py -u "$aim"
+cd -
+mv webApp/xsscrapy/$target.txt Target/$target/xssVuln
+echo ""
+echo -e "\e[1m==> The XSS information is saved to Target/$target/xssVuln\e[0m"
+}
+##Cross-site Scripting(XSS) with DSJS
+xss2(){
+clear
+figlet -c XSS Scanner
+echo " Cross-site Scripting(XSS) "
+python webApp/DSJS/dsjs.py -u "$aim"
+python webApp/DSJS/dsjs.py -u "$aim" > Target/$target/xssVuln2
+echo ""
+echo -e "\e[1m==> The XSS information is saved to Target/$target/xssVuln2\e[0m"
+}
+##SSL
+ssl(){
+clear
+figlet -c SSL Scanner
+echo " SSL "
+python webApp/a2sv/a2sv.py -t "$target"
+python webApp/a2sv/a2sv.py -t "$target" > Target/$target/ssl
+echo ""
+echo -e "\e[1m==> The SSL information is saved to Target/$target/ssl\e[0m"
+}
+##joomla
+joomla(){
+clear
+figlet -c Joomla Scanner
+echo " Joomla "
+ruby webApp/joomlavs/joomlavs.rb -u $target -c -m -t
+echo "Done!"
+}
+##Deploy script
+ipaddress1
