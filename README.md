@@ -43,6 +43,10 @@ After installed run from your terminal
 
 ./JackRabbit
 
+                                   
+                                 Screenshot
+
+![Screenshot from 2020-06-22 19-04-39](https://user-images.githubusercontent.com/66759663/85347496-bf0c4c80-b4c6-11ea-9b9e-693e255070c4.png)
 
 
 
