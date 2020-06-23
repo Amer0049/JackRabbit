@@ -27,6 +27,8 @@ How to use it#
 
 Clone / Download this repository from your terminal
 
+https://github.com/Amer0049/JackRabbit.git
+
 Give access permission for install.sh
 
 chmod 777 install.sh
