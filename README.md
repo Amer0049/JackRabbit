@@ -2,16 +2,17 @@
 
 Automated Web Application Security Scanner Framework.
 
-       JackRabbit Feature tools
-Nmap
+       JackRabbit Feature tool
+       
+Commonly Opened Ports
 
-Domain Name Server (DNS)
+DNS/HTTP Load Balancers & Web Application Firewalls
 
 Subdomain
 
 Nikto
 
-Hidden Files/Directories Scanner
+Open Directory/File Brute Forcing
 
 VulScan
 
